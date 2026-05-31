@@ -1,0 +1,47 @@
+"use client";
+import { useState, useEffect } from 'react';
+import io from 'socket.io-client';
+import { format } from 'date-fns';
+
+let socket;
+
+export default function Dashboard() {
+  const [habits, setHabits] = useState([]);
+  const [coupleStats, setCoupleStats] = useState({ streak: 0, best: 0 });
+  const [partners, setPartners] = useState({}); // Estado de la pareja
+  const [timeLeft, setTimeLeft] = useState("");
+
+  useEffect(() => {
+    // Inicializar Socket
+    socket = io('http://localhost:3001');
+    socket.emit('join_couple', 'couple-id-aqui'); // Obtener de la sesión
+
+    // Cargar datos iniciales (Fetch API)
+    // fetch('/api/dashboard').then(...)
+
+    // Listeners de eventos
+    socket.on('streak_increased', (data) => {
+        // Animación de celebración (Confetti)
+        alert(data.message);
+    });
+
+    return () => socket.disconnect();
+  }, []);
+
+  // Countdown Timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date();
+      const end = new Date();
+      end.setHours(23, 59, 59);
+      const diff = end - now;
+      
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      setTimeLeft(`${hours}h ${minutes}m`);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Función para completar hábito
+  const completeHabit = async (

@@ -1,0 +1,16 @@
+co-op-life/
+├── client/ (Next.js 14+ App Router)
+│   ├── src/
+│   │   ├── app/ (Pages: login, dashboard, calendar, chat)
+│   │   ├── components/ (HabitCard, StreakCounter, ChatBox)
+│   │   ├── hooks/ (useSocket, useStreak)
+│   │   └── lib/ (API calls)
+│   └── tailwind.config.js
+├── server/ (Node.js)
+│   ├── src/
+│   │   ├── config/ (db.js)
+│   │   ├── controllers/ (habitController.js, authController.js)
+│   │   ├── middleware/ (auth.js)
+│   │   ├── routes/
+│   │   └── index.js (Entry point + Socket.io)
+└── .env
